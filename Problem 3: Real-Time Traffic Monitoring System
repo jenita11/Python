@@ -1,0 +1,38 @@
+import requests
+
+def fetch_traffic_data(start, destination, api_key):
+    url = f"https://maps.googleapis.com/maps/api/directions/json?origin={start}&destination={destination}&key={api_key}&departure_time=now&traffic_model=best_guess&mode=driving"
+    response = requests.get(url)
+    
+    if response.status_code == 200:
+        data = response.json()
+        if data['status'] == 'OK':
+            route = data['routes'][0]
+            print(f"Current traffic conditions from {start} to {destination}:")
+            
+            # Get summary of route
+            summary = route['summary']
+            print(f"Route Summary: {summary}")
+            
+            # Get current traffic data
+            legs = route['legs'][0]
+            duration = legs['duration_in_traffic']['text']
+            print(f"Estimated travel time in current traffic: {duration}")
+            
+            # Check for any incidents or delays
+            if 'warnings' in route:
+                warnings = route['warnings']
+                for warning in warnings:
+                    print(f"Warning: {warning}")
+        else:
+            print(f"Error: {data['status']} - {data.get('error_message', 'Unknown error')}")
+    else:
+        print(f"Error: Unable to fetch data. Status code: {response.status_code}")
+
+# Example usage:
+if __name__ == "__main__":
+    start_location = "New York, NY"
+    destination_location = "Los Angeles, CA"
+    google_maps_api_key = "your_google_maps_api_key_here"
+
+    fetch_traffic_data(start_location, destination_location, google_maps_api_key)
