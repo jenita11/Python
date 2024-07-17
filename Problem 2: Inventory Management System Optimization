@@ -1,0 +1,36 @@
+class Product:
+    def __init__(self, id, name, stock_level, reorder_threshold):
+        self.id = id
+        self.name = name
+        self.stock_level = stock_level
+        self.reorder_threshold = reorder_threshold
+
+    def is_low_stock(self):
+        return self.stock_level < self.reorder_threshold
+
+class InventorySystem:
+    def __init__(self):
+        self.products = []
+
+    def add_product(self, product):
+        self.products.append(product)
+
+    def track_inventory(self):
+        for product in self.products:
+            if product.is_low_stock():
+                print(f"Alert: {product.name} is below reorder threshold.")
+
+# Example usage:
+inventory_system = InventorySystem()
+
+# Adding products to the inventory system
+product1 = Product(1, "Laptop", 10, 20)
+product2 = Product(2, "Mouse", 15, 25)
+product3 = Product(3, "Keyboard", 18, 30)
+
+inventory_system.add_product(product1)
+inventory_system.add_product(product2)
+inventory_system.add_product(product3)
+
+# Simulating inventory tracking
+inventory_system.track_inventory()
